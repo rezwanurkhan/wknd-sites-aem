@@ -34,3 +34,15 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=rezwanurkhan_wknd-sites-aem
+      - name: Comment on PR with SonarQube Results
+        if: always()
+        run: |
+          COMMENT_BODY="### SonarQube Analysis Result 🚀\n\n"
+          COMMENT_BODY+="**Quality Gate Status**: \`${{ env.quality_gate_status }}\`\n\n"
+          COMMENT_BODY+="🔍 [View Full Report in SonarQube](${{ secrets.SONAR_HOST_URL }}/dashboard?id=my_project_key)\n"
+          
+          PR_NUMBER=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
+          curl -s -X POST -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+               -H "Accept: application/vnd.github.v3+json" \
+               "https://api.github.com/repos/${{ github.repository }}/issues/${PR_NUMBER}/comments" \
+               -d "{\"body\": \"$COMMENT_BODY\"}"
