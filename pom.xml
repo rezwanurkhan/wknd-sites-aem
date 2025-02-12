@@ -156,8 +156,9 @@
     
     
     <componentGroupName>WKND Sites Project</componentGroupName>
-                
-  
+
+    <sonar.organization>rezwanurkhan</sonar.organization>
+    <sonar.host.url>https://sonarcloud.io</sonar.host.url>
   
   </properties>
           
